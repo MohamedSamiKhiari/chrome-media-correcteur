@@ -1,0 +1,19 @@
+{
+  "manifest_version": 2,
+  "name": "Media Correcteur",
+  "version": "0.0.1",
+  "icons": {
+    "16": "assets/screenshot_1280_800.png",
+    "48": "assets/screenshot_1280_800.png",
+    "128": "assets/screenshot_1280_800.png"
+  },
+  "background": {
+    "scripts": ["main.js"]
+  },
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "*://*.lemonde.fr/*",
+    "*://*.liberation.fr/*"
+  ]
+}
