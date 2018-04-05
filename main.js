@@ -1,33 +1,24 @@
-var medias = ["lemonde","liberation"];
 function tellMistake(info,tab) {
   console.log("Faute trouvée dans : " + info.selectionText);
   chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
     var url = tabs[0].url;
     console.log(url);
-    var site = findMedia(url);
-    console.log(site);
-    saveDatabase(info.selectionText, url, site);
+    var siteDomain = findMediaDomain(url);
+    saveDatabase(info.selectionText, url, siteDomain);
   });
 }
-function findMedia(url) {
+function findMediaDomain(url) {
   var match = url.match(/:\/\/(www[0-9]?\.)?(.[^/:]+)/i);
-    if (match != null && match.length > 2 && typeof match[2] === 'string' && match[2].length > 0) {
-      var arrayLength = medias.length;
-      for (var i = 0; i < arrayLength; i++) {
-          if(match[2].match(medias[i]) == medias[i]){
-            return medias[i];
-          }
-      }
-    }
-    else {
-        return null;
-    }
+  return match[2]
 }
-function saveDatabase(mistake, url, site) {
+
+function saveDatabase(mistake, url, siteDomain) {
   var request = new XMLHttpRequest();
-  request.open("POST", "http://www.oh-hi-denny.com/", true);
+  request.open("POST", "http://denoncetafaute.com/mistakes", true);
   request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  request.send(JSON.stringify({mistake: mistake, url: url, media: site}));
+  request.send(JSON.stringify({"extract": mistake, "url": url, "siteDomain": siteDomain}));
+    var newURL = "http://denoncetafaute.com/merci";
+    chrome.tabs.create({ url: newURL });
 };
 
 chrome.contextMenus.create({
